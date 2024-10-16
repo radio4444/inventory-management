@@ -21,7 +21,6 @@ const style = {
 };
 
 
-
 export default function Home() {
     const [inventory, setInventory] = useState([]);
     const [open, setOpen] = useState(false);
@@ -33,15 +32,27 @@ export default function Home() {
         const docs = await getDocs(snapshot);
         const inventoryList = [];
         docs.forEach((doc) => {
-            inventoryList.push({name: doc.id, ...doc.data()})
-            setInventory(inventoryList)
+            inventoryList.push({name: doc.id, ...doc.data()});
+            setInventory(inventoryList);
         });
     };
     useEffect(() => {
-        updateInventory()
+        updateInventory();
     }, []);
 
-
+    //Add Inventory Function
+    const addItem = async (item) => {
+        const docRef = doc(collection(firestore, 'inventory'), item);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const {quantity} = docSnap.data();
+            await setDoc(docRef, {quantity: quantity + 1})
+        }
+        else {
+            await setDoc (docRef, {quantity: 1})
+        }
+        await updateInventory()
+    };
 
     return (
         <Box>
