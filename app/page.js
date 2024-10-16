@@ -20,4 +20,12 @@ const style = {
   gap: 3,
 }
 
+export default function Home(){
+  return (
+      <Box>
+        <Typography variant = "h1">Inventory Management</Typography>
+      </Box>
+  )
+}
+
 
