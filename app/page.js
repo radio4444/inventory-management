@@ -26,7 +26,7 @@ export default function Home() {
     const [open, setOpen] = useState(false);
     const [itemName, setItemName] = useState('');
 
-    //Update Inventory function
+    //Update-item function
     const updateInventory = async () => {
         const snapshot = query(collection(firestore, 'inventory'));
         const docs = await getDocs(snapshot);
@@ -40,18 +40,32 @@ export default function Home() {
         updateInventory();
     }, []);
 
-    //Add Inventory Function
+    //Add-item function
     const addItem = async (item) => {
         const docRef = doc(collection(firestore, 'inventory'), item);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             const {quantity} = docSnap.data();
-            await setDoc(docRef, {quantity: quantity + 1})
+            await setDoc(docRef, {quantity: quantity + 1});
+        } else {
+            await setDoc(docRef, {quantity: 1});
         }
-        else {
-            await setDoc (docRef, {quantity: 1})
+        await updateInventory();
+    };
+
+    //Delete-item function
+    const removeItem = async (item) => {
+        const docRef = doc(collection(firestore, 'inventory'), item);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const {quantity} = docSnap.data();
+            if (quantity === 1) {
+                await deleteDoc(docRef);
+            } else {
+                await setDoc(docRef, {quantity: quantity - 1});
+            }
         }
-        await updateInventory()
+        await updateInventory();
     };
 
     return (
