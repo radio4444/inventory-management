@@ -21,6 +21,10 @@ const style = {
 }
 
 export default function Home(){
+  const [inventory, setInventory] = useState([])
+  const [open, setOpen] = useState(false)
+  const [itemName, setItemName] = useState('')
+
   return (
       <Box>
         <Typography variant = "h1">Inventory Management</Typography>
